@@ -1,38 +1,21 @@
-import React from "react";
+import Link from "next/link";
+import UserTable from "./UserTable";
 
-interface User {
-  id: number;
-  name: string;
-  email: string;
+interface UsersPageProps {
+  searchParams: {
+    sortOrder: string;
+  };
 }
 
-const UsersPage = async () => {
-  const response = await fetch("https://jsonplaceholder.typicode.com/users", {
-    next: { revalidate: 10 },
-  });
-  const users: User[] = await response.json();
-
+const UsersPage = async ({ searchParams }: UsersPageProps) => {
+  const { sortOrder } = await searchParams;
   return (
     <>
       <h1>Users</h1>
-      <p>{new Date().toLocaleTimeString()}</p>
-      <table className="table table-bordered">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user) => (
-            <tr key={user.id}>
-              <td> {user.name}</td>
-              <td> {user.email}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <ul></ul>
+      <Link href="/users/new" className="btn">
+        New User
+      </Link>
+      <UserTable sortOrder={sortOrder} />
     </>
   );
 };
