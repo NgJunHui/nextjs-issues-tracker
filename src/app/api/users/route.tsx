@@ -1,19 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "../../../../prisma/client";
 
-export function GET(request: NextRequest) {
+export async function GET(request: NextRequest) {
+  const users = await prisma.user.findMany();
   // need to add request param so that data doesnt cache
-  return NextResponse.json([
-    {
-      id: 1,
-      name: "test",
-      age: 13,
-    },
-    {
-      id: 2,
-      name: "test2",
-      age: 13,
-    },
-  ]);
+  return NextResponse.json(users);
 }
 
 /**
@@ -26,5 +17,23 @@ export async function POST(request: NextRequest) {
   if (!body.name) {
     return NextResponse.json({ error: "Name is required" }, { status: 400 });
   }
-  return NextResponse.json({ id: 1, name: body.name }, { status: 201 });
+
+  const user = await prisma.user.findUnique({
+    where: {
+      email: body.email,
+    },
+  });
+
+  if (user) {
+    return NextResponse.json({ error: "Duplicate email" }, { status: 400 });
+  }
+
+  const newUser = await prisma.user.create({
+    data: {
+      name: body.name,
+      email: body.email,
+    },
+  });
+
+  return NextResponse.json(newUser, { status: 201 });
 }

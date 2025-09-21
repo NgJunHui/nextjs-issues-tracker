@@ -9,8 +9,10 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@prisma/client": "^6.16.2",
     "fast-sort": "^3.4.1",
     "next": "15.5.2",
+    "prisma": "^6.16.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "zod": "^4.1.8"
